@@ -48,8 +48,8 @@
 
   function updateContent() {
     const scrollTop = container.scrollTop;
-    const startIndex = Math.max(Math.floor(scrollTop / ITEM_HEIGHT) - 5, 0);
-    const endIndex = Math.min(Math.ceil((scrollTop + container.clientHeight) / ITEM_HEIGHT) + 5, ITEM_COUNT - 1);
+    const startIndex = Math.floor(scrollTop / ITEM_HEIGHT);
+    const endIndex = Math.ceil((scrollTop + container.clientHeight) / ITEM_HEIGHT);
     let renderData = data.slice(startIndex, endIndex + 1);
     content.style.transform = 'translateY(' + startIndex * ITEM_HEIGHT + 'px)';
     content.innerHTML = renderData.map(item => `<div class="item">${item.content}</div>`).join('');
