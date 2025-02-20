@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #container {
+            height: 400px;
+            width: 400px;
+            overflow: auto;
+            border: 1px solid #ccc;
+            position: relative;
+        }
+
+        #placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .item {
+            height: 50px;
+            box-sizing: border-box;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="placeholder"></div>
+    <div id="content"></div>
+</div>
+<script>
+  const ITEM_HEIGHT = 50;
+  const ITEM_COUNT = 10000;
+  const container = document.getElementById('container');
+  const placeholder = document.getElementById('placeholder');
+  const content = document.getElementById('content');
+
+  const data = new Array(ITEM_COUNT).fill(0).map((_, index) => {
+    return {
+      id: index + 1,
+      content: `Item ${index + 1}`,
+    };
+  });
+
+  placeholder.style.height = ITEM_HEIGHT * ITEM_COUNT + 'px';
+
+  function updateContent() {
+    const scrollTop = container.scrollTop;
+    const startIndex = Math.max(Math.floor(scrollTop / ITEM_HEIGHT) - 5, 0);
+    const endIndex = Math.min(Math.ceil((scrollTop + container.clientHeight) / ITEM_HEIGHT) + 5, ITEM_COUNT - 1);
+    let renderData = data.slice(startIndex, endIndex + 1);
+    content.style.transform = 'translateY(' + startIndex * ITEM_HEIGHT + 'px)';
+    content.innerHTML = renderData.map(item => `<div class="item">${item.content}</div>`).join('');
+  }
+
+  // 在滚动时，计算内容区域渲染的内容和距离顶部的高度
+  container.addEventListener('scroll', () => {
+    let isScrolling = false;
+    window.requestAnimationFrame(() => {
+      if (!isScrolling) {
+        updateContent();
+        isScrolling = false;
+        return;
+      }
+      isScrolling = true;
+    });
+  });
+  updateContent();
+</script>
+</body>
+</html>
