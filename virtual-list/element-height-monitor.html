@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>元素高度监控示例</title>
+    <style>
+        .container {
+            margin: 50px auto;
+            max-width: 600px;
+        }
+
+        .resizable-box {
+            background: #f0f0f0;
+            border: 2px solid #ccc;
+            padding: 20px;
+            margin: 20px 0;
+            /* 允许用户垂直调整大小 */
+            resize: vertical;
+            overflow: auto;
+            min-height: 100px;
+        }
+
+        .height-status {
+            padding: 10px;
+            background: #333;
+            color: white;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            border-radius: 4px;
+        }
+
+        .highlight {
+            background: #ffd700 !important;
+            transition: background 0.3s;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="resizable-box" id="targetElement">
+        <p>拖动下方边缘调整高度 ↓</p>
+        <p>当前内容高度会被实时监控</p>
+    </div>
+</div>
+<div class="height-status" id="heightStatus">
+    当前高度：<span id="heightValue">0</span>px
+</div>
+
+<script>
+  // 获取 DOM 元素
+  const targetElement = document.getElementById('targetElement');
+  const heightValue = document.getElementById('heightValue');
+  const statusBox = document.getElementById('heightStatus');
+
+  targetElement._resizeObserverCallback_ = (newHeight) => {
+    // 这里的频率很高，可以考虑节流
+    console.log('========== DEBUG ==========');
+    // 更新显示高度
+    heightValue.textContent = newHeight;
+    // 添加视觉反馈
+    statusBox.classList.add('highlight');
+    setTimeout(() => statusBox.classList.remove('highlight'), 200);
+  };
+
+  // 创建 ResizeObserver 实例
+  const resizeObserver = new ResizeObserver(entries => {
+    for (let entry of entries) {
+      const newHeight = Math.round(entry.contentRect.height);
+      entry.target._resizeObserverCallback_(newHeight);
+    }
+  });
+
+  // 开始观察目标元素
+  resizeObserver.observe(targetElement);
+
+  // 初始化显示高度
+  heightValue.textContent = Math.round(targetElement.offsetHeight);
+</script>
+</body>
+</html>
