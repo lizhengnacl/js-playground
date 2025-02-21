@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #container {
+            height: 800px;
+            width: 400px;
+            overflow: auto;
+            border: 1px solid #ccc;
+            position: relative;
+        }
+
+        #placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .item {
+            position: absolute;
+            width: 100%;
+            height: 50px;
+            box-sizing: border-box;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="placeholder"></div>
+    <div id="content"></div>
+</div>
+<script>
+  const ITEM_HEIGHT = 50;
+  const BUFFER = 5;
+  const ITEM_COUNT = 10000;
+  const placeHolderHeight = 10000 * 50;
+  const container = document.getElementById('container');
+  const placeholderElm = document.getElementById('placeholder');
+  const content = document.getElementById('content');
+
+  placeholderElm.style.height = placeHolderHeight + 'px';
+
+  // 计算渲染item的起止位置
+  function findStartIndex(height) {
+    return Math.max(Math.floor(height / ITEM_HEIGHT) - BUFFER, 0);
+  }
+
+  function findEndIndex(height) {
+    return Math.min(Math.ceil(height / ITEM_HEIGHT) + BUFFER, ITEM_COUNT);
+  }
+
+  function renderItem(index) {
+    let div = document.createElement('div');
+    div.className = 'item';
+    div.style.top = `${index * ITEM_HEIGHT}px`;
+    div.innerHTML = index;
+    div.dataset.index = index;
+    return div;
+  }
+
+  function renderContent() {
+    let startIndex = findStartIndex(container.scrollTop);
+    let endIndex = findEndIndex(container.scrollTop + container.clientHeight);
+
+    let renderedItems = [];
+    // 判断哪些元素需要新增，哪些需要剔除
+    document.querySelectorAll('.item').forEach(item => {
+      let index = parseInt(item.dataset.index);
+      if (index >= startIndex && index <= endIndex) {
+        // 保留
+        renderedItems[index] = item;
+      } else {
+        // 剔除
+        item.remove();
+      }
+    });
+
+    // 新增到内容区域中
+    const fragment = document.createDocumentFragment();
+    for (let i = startIndex; i <= endIndex; i++) {
+      if (renderedItems[i] === undefined) {
+        let item = renderItem(i);
+        fragment.append(item);
+      }
+    }
+    content.appendChild(fragment);
+  }
+
+  container.addEventListener('scroll', () => {
+    renderContent();
+  });
+
+  renderContent();
+</script>
+</body>
+</html>
