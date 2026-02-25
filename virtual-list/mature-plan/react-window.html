@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>React Window Demo</title>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <!-- 需要的依赖 -->
     <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
@@ -10,66 +10,66 @@
     <script src="https://unpkg.com/react-window@1.8.7/dist/index-prod.umd.js"></script>
 
     <style>
-        .List {
-            border: 1px solid #ddd;
-            margin: 20px auto;
-            width: 300px;
-        }
+      .List {
+        border: 1px solid #ddd;
+        margin: 20px auto;
+        width: 300px;
+      }
 
-        .ListItem {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            font-family: sans-serif;
-        }
+      .ListItem {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        font-family: sans-serif;
+      }
 
-        .ListItem:nth-child(even) {
-            background-color: #f8f8f8;
-        }
+      .ListItem:nth-child(even) {
+        background-color: #f8f8f8;
+      }
 
-        .ListItem:hover {
-            background-color: #e0e0e0;
-        }
+      .ListItem:hover {
+        background-color: #e0e0e0;
+      }
     </style>
-</head>
-<body>
-<div id="root"></div>
+  </head>
+  <body>
+    <div id="root"></div>
 
-<script type="text/babel">
-  const {FixedSizeList} = ReactWindow;
+    <script type="text/babel">
+      const { FixedSizeList } = ReactWindow
 
-  // 生成测试数据
-  const generateItems = numItems =>
-      Array.from({length: numItems}, (_, index) => ({
-        id: index,
-        content: `列表项 ${index + 1}`,
-      }));
+      // 生成测试数据
+      const generateItems = numItems =>
+        Array.from({ length: numItems }, (_, index) => ({
+          id: index,
+          content: `列表项 ${index + 1}`
+        }))
 
-  // 列表项组件
-  const Row = ({index, style, data}) => (
-      <div className="ListItem" style={style}>
-        {data[index].content}
-      </div>
-  );
+      // 列表项组件
+      const Row = ({ index, style, data }) => (
+        <div className="ListItem" style={style}>
+          {data[index].content}
+        </div>
+      )
 
-  // 主组件
-  const App = () => {
-    const items = generateItems(1000); // 生成1000条测试数据
+      // 主组件
+      const App = () => {
+        const items = generateItems(1000) // 生成1000条测试数据
 
-    return (
-        <FixedSizeList
+        return (
+          <FixedSizeList
             className="List"
             height={400}
             width={300}
-            itemSize={50}  // 每项高度
+            itemSize={50} // 每项高度
             itemCount={items.length}
             itemData={items}
-        >
-          {Row}
-        </FixedSizeList>
-    );
-  };
+          >
+            {Row}
+          </FixedSizeList>
+        )
+      }
 
-  ReactDOM.render(<App/>, document.getElementById('root'));
-</script>
-</body>
+      ReactDOM.render(<App />, document.getElementById('root'))
+    </script>
+  </body>
 </html>

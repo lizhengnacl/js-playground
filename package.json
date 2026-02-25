@@ -1,12 +1,28 @@
 {
   "name": "js-playground",
   "version": "1.0.0",
-  "description": "",
+  "description": "JavaScript 练习项目",
   "main": "index.js",
   "scripts": {
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md}\"",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md}\"",
+    "format:js": "prettier --write \"**/*.js\"",
+    "format:html": "prettier --write \"**/*.html\"",
+    "lint": "eslint \"**/*.js\"",
+    "lint:fix": "eslint \"**/*.js\" --fix",
+    "lint:check": "eslint \"**/*.js\" --max-warnings=0",
+    "fix": "npm run lint:fix && npm run format",
+    "check": "npm run lint:check && npm run format:check",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "javascript",
+    "playground"
+  ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.2"
+  }
 }

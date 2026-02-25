@@ -1,157 +1,160 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-        #container {
-            height: 500px;
-            width: 400px;
-            overflow: auto;
-            border: 1px solid #ccc;
-            position: relative;
-        }
+      #container {
+        height: 500px;
+        width: 400px;
+        overflow: auto;
+        border: 1px solid #ccc;
+        position: relative;
+      }
 
-        #placeholder {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-        }
+      #placeholder {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+      }
 
-        .item {
-            position: absolute;
-            width: 100%;
-            box-sizing: border-box;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
+      .item {
+        position: absolute;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+      }
     </style>
-</head>
-<body>
-<div id="container">
-    <div id="placeholder"></div>
-    <div id="content"></div>
-</div>
-<script>
-  const DEFAULT_ITEM_HEIGHT = 50;
-  const BUFFER = 5;
-  const ITEM_COUNT = 100;
-  const placeHolderHeight = 100 * 50;
+  </head>
+  <body>
+    <div id="container">
+      <div id="placeholder"></div>
+      <div id="content"></div>
+    </div>
+    <script>
+      const DEFAULT_ITEM_HEIGHT = 50
+      const BUFFER = 5
+      const ITEM_COUNT = 100
+      const placeHolderHeight = 100 * 50
 
-  const container = document.getElementById('container');
-  const placeholderElm = document.getElementById('placeholder');
-  const content = document.getElementById('content');
+      const container = document.getElementById('container')
+      const placeholderElm = document.getElementById('placeholder')
+      const content = document.getElementById('content')
 
-  placeholderElm.style.height = placeHolderHeight + 'px';
+      placeholderElm.style.height = placeHolderHeight + 'px'
 
-  // 记录每个元素实际的高度
-  // 在滚动后，渲染后，去更新这个值，然后基于这个更新可视区域元素的top值
-  let itemsRealHeight = [];
-  // 第一次用默认高度填充
-  for (let i = 0; i < ITEM_COUNT; i++) {
-    itemsRealHeight[i] = DEFAULT_ITEM_HEIGHT;
-  }
-
-  // 计算累加值
-  function getItemsTopValue(itemsRealHeight) {
-    let itemsTopValue = [];
-    let top = 0;
-    for (let i = 0; i < itemsRealHeight.length; i++) {
-      itemsTopValue[i] = top;
-      top += itemsRealHeight[i];
-    }
-    itemsTopValue.totalHeight = top;
-    return itemsTopValue;
-  }
-
-  let itemsTopValue = getItemsTopValue(itemsRealHeight);
-
-  // 计算起止位置
-  // 可以用二分查找优化
-  function findIndex(height) {
-    let index = -1;
-    for (let i = itemsTopValue.length - 1; i >= 0; i--) {
-      if (height > itemsTopValue[i]) {
-        index = i;
-        break;
+      // 记录每个元素实际的高度
+      // 在滚动后，渲染后，去更新这个值，然后基于这个更新可视区域元素的top值
+      let itemsRealHeight = []
+      // 第一次用默认高度填充
+      for (let i = 0; i < ITEM_COUNT; i++) {
+        itemsRealHeight[i] = DEFAULT_ITEM_HEIGHT
       }
-    }
-    return index;
-  }
 
-  function renderItem(index) {
-    let div = document.createElement('div');
-    div.className = 'item';
-    div.style.top = `${itemsTopValue[index]}px`;
-    div.innerHTML = index + ' - ' + '内容填充 '.repeat(Math.floor(Math.random() * 40));
-    div.dataset.index = index;
-    return div;
-  }
-
-  async function renderContent() {
-    let startIndex = Math.max(findIndex(container.scrollTop), 0);
-    let endIndex = Math.min(findIndex(container.scrollTop + container.clientHeight), ITEM_COUNT - 1);
-
-    let renderedItems = [];
-    // 判断哪些元素需要新增，哪些需要剔除
-    document.querySelectorAll('.item').forEach(item => {
-      let index = parseInt(item.dataset.index);
-      if (index >= startIndex && index <= endIndex) {
-        // 保留
-        renderedItems[index] = item;
-      } else {
-        // 剔除
-        item.remove();
+      // 计算累加值
+      function getItemsTopValue(itemsRealHeight) {
+        let itemsTopValue = []
+        let top = 0
+        for (let i = 0; i < itemsRealHeight.length; i++) {
+          itemsTopValue[i] = top
+          top += itemsRealHeight[i]
+        }
+        itemsTopValue.totalHeight = top
+        return itemsTopValue
       }
-    });
 
-    // 新增到内容区域中
-    const fragment = document.createDocumentFragment();
-    for (let i = startIndex; i <= endIndex; i++) {
-      if (renderedItems[i] === undefined) {
-        let item = renderItem(i);
-        fragment.append(item);
+      let itemsTopValue = getItemsTopValue(itemsRealHeight)
+
+      // 计算起止位置
+      // 可以用二分查找优化
+      function findIndex(height) {
+        let index = -1
+        for (let i = itemsTopValue.length - 1; i >= 0; i--) {
+          if (height > itemsTopValue[i]) {
+            index = i
+            break
+          }
+        }
+        return index
       }
-    }
-    content.appendChild(fragment);
 
-    // 优化高密度计算，避免阻塞UI渲染 性能优化
-    await new Promise(r => requestAnimationFrame(r));
-    // 计算元素的实际高度
-    content.querySelectorAll('.item').forEach(item => {
-      const index = parseInt(item.dataset.index);
-      const realHeight = item.offsetHeight;
-      console.log('========== DEBUG ==========');
-
-      if (itemsRealHeight[index] !== realHeight) {
-        itemsRealHeight[index] = realHeight;
-        itemsTopValue = getItemsTopValue(itemsRealHeight);
+      function renderItem(index) {
+        let div = document.createElement('div')
+        div.className = 'item'
+        div.style.top = `${itemsTopValue[index]}px`
+        div.innerHTML = index + ' - ' + '内容填充 '.repeat(Math.floor(Math.random() * 40))
+        div.dataset.index = index
+        return div
       }
-    });
 
-    // 更新所有可见元素的位置
-    content.querySelectorAll('.item').forEach(updateItem => {
-      const idx = parseInt(updateItem.dataset.index);
-      updateItem.style.top = `${itemsTopValue[idx]}px`;
-    });
+      async function renderContent() {
+        let startIndex = Math.max(findIndex(container.scrollTop), 0)
+        let endIndex = Math.min(
+          findIndex(container.scrollTop + container.clientHeight),
+          ITEM_COUNT - 1
+        )
 
-    // 更新占位符高度
-    placeholderElm.style.height = itemsTopValue.totalHeight + 'px';
-  }
+        let renderedItems = []
+        // 判断哪些元素需要新增，哪些需要剔除
+        document.querySelectorAll('.item').forEach(item => {
+          let index = parseInt(item.dataset.index)
+          if (index >= startIndex && index <= endIndex) {
+            // 保留
+            renderedItems[index] = item
+          } else {
+            // 剔除
+            item.remove()
+          }
+        })
 
-  let running = false;
-  container.addEventListener('scroll', () => {
-    if (!running) {
-      requestAnimationFrame(async () => {
-        await renderContent();
-        running = false;
-      });
-      running = true;
-    }
-  });
+        // 新增到内容区域中
+        const fragment = document.createDocumentFragment()
+        for (let i = startIndex; i <= endIndex; i++) {
+          if (renderedItems[i] === undefined) {
+            let item = renderItem(i)
+            fragment.append(item)
+          }
+        }
+        content.appendChild(fragment)
 
-  renderContent();
-</script>
-</body>
+        // 优化高密度计算，避免阻塞UI渲染 性能优化
+        await new Promise(r => requestAnimationFrame(r))
+        // 计算元素的实际高度
+        content.querySelectorAll('.item').forEach(item => {
+          const index = parseInt(item.dataset.index)
+          const realHeight = item.offsetHeight
+          console.log('========== DEBUG ==========')
+
+          if (itemsRealHeight[index] !== realHeight) {
+            itemsRealHeight[index] = realHeight
+            itemsTopValue = getItemsTopValue(itemsRealHeight)
+          }
+        })
+
+        // 更新所有可见元素的位置
+        content.querySelectorAll('.item').forEach(updateItem => {
+          const idx = parseInt(updateItem.dataset.index)
+          updateItem.style.top = `${itemsTopValue[idx]}px`
+        })
+
+        // 更新占位符高度
+        placeholderElm.style.height = itemsTopValue.totalHeight + 'px'
+      }
+
+      let running = false
+      container.addEventListener('scroll', () => {
+        if (!running) {
+          requestAnimationFrame(async () => {
+            await renderContent()
+            running = false
+          })
+          running = true
+        }
+      })
+
+      renderContent()
+    </script>
+  </body>
 </html>

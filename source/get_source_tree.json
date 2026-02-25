@@ -62,9 +62,7 @@
                 "show_left_menu": false,
                 "group": "default",
                 "terminal": "default",
-                "search_tags": [
-                  ""
-                ],
+                "search_tags": [""],
                 "intercept": []
               }
             }
@@ -1061,10 +1059,7 @@
               "show_left_menu": true,
               "group": "default",
               "terminal": "default",
-              "search_tags": [
-                "优价推手计划",
-                "价格诊断"
-              ],
+              "search_tags": ["优价推手计划", "价格诊断"],
               "intercept": []
             },
             "child_node": null,
@@ -6289,13 +6284,7 @@
               "show_left_menu": true,
               "group": "default",
               "terminal": "default",
-              "search_tags": [
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
+              "search_tags": ["", "", "", "", ""],
               "intercept": []
             },
             "child_node": null,
@@ -15025,10 +15014,7 @@
               "show_left_menu": true,
               "group": "default",
               "terminal": "default",
-              "search_tags": [
-                "质检",
-                "送检"
-              ],
+              "search_tags": ["质检", "送检"],
               "intercept": [
                 {
                   "rule_key": "is_second_hand_or_white_list_qic",
@@ -24610,10 +24596,7 @@
                         "show_left_menu": true,
                         "group": "default",
                         "terminal": "default",
-                        "search_tags": [
-                          "素材",
-                          "素材制作"
-                        ],
+                        "search_tags": ["素材", "素材制作"],
                         "intercept": []
                       }
                     },
@@ -24642,10 +24625,7 @@
                         "show_left_menu": true,
                         "group": "default",
                         "terminal": "default",
-                        "search_tags": [
-                          "素材管理",
-                          "素材"
-                        ],
+                        "search_tags": ["素材管理", "素材"],
                         "intercept": []
                       }
                     },
@@ -24674,10 +24654,7 @@
                         "show_left_menu": true,
                         "group": "default",
                         "terminal": "default",
-                        "search_tags": [
-                          "主图测图",
-                          "素材"
-                        ],
+                        "search_tags": ["主图测图", "素材"],
                         "intercept": []
                       }
                     },
@@ -24836,11 +24813,7 @@
                         "show_left_menu": true,
                         "group": "default",
                         "terminal": "default",
-                        "search_tags": [
-                          "素材库",
-                          "我的素材",
-                          "素材"
-                        ],
+                        "search_tags": ["素材库", "我的素材", "素材"],
                         "intercept": []
                       }
                     },
@@ -36515,11 +36488,7 @@
                           "show_left_menu": true,
                           "group": "default",
                           "terminal": "default",
-                          "search_tags": [
-                            "关店",
-                            "闭店",
-                            "退店"
-                          ],
+                          "search_tags": ["关店", "闭店", "退店"],
                           "intercept": []
                         },
                         "child_node": null,
@@ -36836,10 +36805,7 @@
                       "show_left_menu": true,
                       "group": "default",
                       "terminal": "default",
-                      "search_tags": [
-                        "变更营业执照",
-                        "资质变更"
-                      ],
+                      "search_tags": ["变更营业执照", "资质变更"],
                       "intercept": []
                     },
                     "child_node": null,
